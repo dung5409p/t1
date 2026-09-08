@@ -1,0 +1,32 @@
+FLASHNOVA - HƯỚNG DẪN NHANH
+
+1) Đây là PWA: chạy như app, có thể cài lên màn hình chính và dùng offline sau lần tải đầu.
+
+2) Cách cài dễ nhất:
+- Giải nén thư mục flashnova-pwa.
+- Đưa toàn bộ thư mục lên một hosting HTTPS tĩnh (ví dụ GitHub Pages, Netlify, Vercel hoặc hosting trường/cá nhân).
+- Mở địa chỉ đó trên điện thoại.
+- Android Chrome/Edge: Menu -> Cài ứng dụng / Thêm vào màn hình chính.
+- iPhone Safari: Chia sẻ -> Thêm vào Màn hình chính.
+
+3) Tính năng:
+- Tạo/sửa/xóa bộ thẻ.
+- Dán nhanh danh sách từ và nghĩa.
+- Nhập CSV/TSV/TXT và sao lưu/khôi phục JSON.
+- Flashcards: lật thẻ, phát âm, đánh dấu thẻ khó, ghi tiến độ.
+- Learn: trắc nghiệm + nhập đáp án.
+- Test: bài kiểm tra tự sinh và xem lại câu sai.
+- Match: trò ghép cặp có bấm giờ.
+- Tìm kiếm bộ thẻ, thống kê mức độ nắm bài.
+- Giao diện sáng/tối.
+- Dữ liệu lưu trên thiết bị, không cần tài khoản.
+
+4) Định dạng dán/nhập nhanh:
+apple<TAB>quả táo
+book<TAB>quyển sách
+
+Hoặc:
+apple;quả táo
+book;quyển sách
+
+Lưu ý: Bản này tập trung vào khoảng 90% nhu cầu học cá nhân kiểu Quizlet, không có cloud sync, lớp học/giáo viên, chia sẻ công khai hay AI server-side.

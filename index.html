@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#5b5bd6" />
+  <meta name="description" content="FlashNova - app học từ vựng bằng flashcard, Learn, Test và Match, dùng được offline." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>FlashNova</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-icon">F</div>
+      <div>
+        <div class="brand">FlashNova</div>
+        <div class="brand-sub">Flashcards • Learn • Test • Match</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="installBtn" class="btn ghost hidden" title="Cài ứng dụng">Cài app</button>
+      <button id="themeBtn" class="icon-btn" title="Đổi giao diện">☾</button>
+    </div>
+  </header>
+
+  <main id="app" class="app-shell">
+    <section id="homeView" class="view active">
+      <div class="hero card">
+        <div>
+          <p class="eyebrow">HỌC NHANH HƠN</p>
+          <h1>Biến danh sách từ thành bài học.</h1>
+          <p class="muted">Tạo bộ thẻ, ôn bằng flashcard, luyện nhớ, làm test, chơi ghép cặp và nghe phát âm — kể cả khi không có mạng.</p>
+        </div>
+        <button id="newSetHero" class="btn primary">+ Tạo bộ thẻ</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Tìm bộ thẻ..." autocomplete="off" />
+        </div>
+        <button id="newSetBtn" class="btn primary">+ Bộ thẻ mới</button>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2>Bộ thẻ của bạn</h2>
+          <p id="setCountLabel" class="muted small"></p>
+        </div>
+        <div class="inline-actions">
+          <button id="importBtn" class="btn ghost">Nhập</button>
+          <button id="backupBtn" class="btn ghost">Sao lưu</button>
+        </div>
+      </div>
+
+      <div id="setGrid" class="set-grid"></div>
+      <div id="emptyState" class="empty-state card hidden">
+        <div class="empty-icon">✦</div>
+        <h3>Chưa có bộ thẻ nào</h3>
+        <p class="muted">Tạo bộ đầu tiên hoặc nhập danh sách từ từ CSV/TSV.</p>
+        <button class="btn primary" id="emptyCreateBtn">Tạo bộ thẻ đầu tiên</button>
+      </div>
+    </section>
+
+    <section id="setView" class="view">
+      <div class="back-row">
+        <button class="btn ghost" data-go-home>← Quay lại</button>
+        <div class="inline-actions">
+          <button id="editSetBtn" class="btn ghost">Sửa</button>
+          <button id="exportSetBtn" class="btn ghost">Xuất</button>
+          <button id="deleteSetBtn" class="btn danger-soft">Xóa</button>
+        </div>
+      </div>
+
+      <div class="set-header card">
+        <div>
+          <p class="eyebrow">BỘ THẺ</p>
+          <h1 id="setTitle"></h1>
+          <p id="setMeta" class="muted"></p>
+        </div>
+        <div class="progress-ring-wrap">
+          <div class="progress-ring" id="masteryRing"><span id="masteryPct">0%</span></div>
+          <div class="small muted">đã nắm</div>
+        </div>
+      </div>
+
+      <div class="mode-grid">
+        <button class="mode-card" data-mode="flash">
+          <span class="mode-icon">▣</span><strong>Flashcards</strong><small>Lật thẻ, nghe phát âm</small>
+        </button>
+        <button class="mode-card" data-mode="learn">
+          <span class="mode-icon">◎</span><strong>Learn</strong><small>Trắc nghiệm + tự nhập</small>
+        </button>
+        <button class="mode-card" data-mode="test">
+          <span class="mode-icon">✓</span><strong>Test</strong><small>Bài kiểm tra tự tạo</small>
+        </button>
+        <button class="mode-card" data-mode="match">
+          <span class="mode-icon">⌁</span><strong>Match</strong><small>Ghép từ với nghĩa</small>
+        </button>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2>Danh sách thẻ</h2>
+          <p class="muted small">Chạm ngôi sao để đánh dấu thẻ khó.</p>
+        </div>
+      </div>
+      <div id="termList" class="term-list"></div>
+    </section>
+
+    <section id="studyView" class="view">
+      <div class="back-row">
+        <button class="btn ghost" id="backToSetBtn">← Bộ thẻ</button>
+        <div class="study-title-wrap"><strong id="studyModeTitle"></strong><span id="studyProgressLabel" class="muted small"></span></div>
+        <button class="btn ghost" id="restartStudyBtn">Làm lại</button>
+      </div>
+      <div id="studyContent"></div>
+    </section>
+
+    <section id="settingsView" class="view">
+      <div class="back-row"><button class="btn ghost" data-go-home>← Quay lại</button></div>
+      <div class="settings card">
+        <h2>Cài đặt</h2>
+        <div class="setting-row">
+          <div><strong>Giao diện</strong><p class="muted small">Sáng, tối hoặc theo hệ thống.</p></div>
+          <select id="themeSelect"><option value="system">Theo máy</option><option value="light">Sáng</option><option value="dark">Tối</option></select>
+        </div>
+        <div class="setting-row">
+          <div><strong>Ngôn ngữ phát âm mặc định</strong><p class="muted small">Dùng giọng đọc có sẵn trên điện thoại.</p></div>
+          <select id="ttsLangSelect"><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="vi-VN">Tiếng Việt</option><option value="zh-CN">中文</option><option value="ja-JP">日本語</option><option value="ko-KR">한국어</option></select>
+        </div>
+        <div class="setting-row">
+          <div><strong>Dữ liệu</strong><p class="muted small">Dữ liệu hiện lưu trên thiết bị của bạn.</p></div>
+          <div class="inline-actions"><button id="restoreBtn" class="btn ghost">Khôi phục</button><button id="resetBtn" class="btn danger-soft">Xóa toàn bộ</button></div>
+        </div>
+        <div class="setting-row">
+          <div><strong>Cài lên điện thoại</strong><p class="muted small">Android: mở bằng Chrome/Edge rồi chọn “Cài ứng dụng”. iPhone: Safari → Chia sẻ → Thêm vào Màn hình chính.</p></div>
+          <button id="installSettingsBtn" class="btn primary">Cài app</button>
+        </div>
+      </div>
+      <div class="card about-card">
+        <h3>FlashNova</h3>
+        <p class="muted">Bản học cá nhân, không cần tài khoản. Có flashcard, Learn, Test, Match, phát âm, thống kê, đánh dấu thẻ khó, nhập/xuất dữ liệu và chạy offline.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button data-nav="home" class="active"><span>⌂</span><small>Trang chủ</small></button>
+    <button data-nav="settings"><span>⚙</span><small>Cài đặt</small></button>
+  </nav>
+
+  <dialog id="setDialog" class="dialog">
+    <form method="dialog" id="setForm">
+      <div class="dialog-head">
+        <div><p class="eyebrow">BỘ THẺ</p><h2 id="setDialogTitle">Tạo bộ thẻ</h2></div>
+        <button type="button" class="icon-btn" id="closeSetDialog">×</button>
+      </div>
+      <label class="field-label">Tên bộ thẻ<input id="setNameInput" maxlength="80" placeholder="Ví dụ: Unit 1 - School" required /></label>
+      <label class="field-label">Mô tả<textarea id="setDescInput" rows="2" maxlength="240" placeholder="Mô tả ngắn (không bắt buộc)"></textarea></label>
+      <div class="cards-editor-head"><strong>Thẻ</strong><button type="button" id="pasteImportBtn" class="btn ghost">Dán danh sách</button></div>
+      <div id="cardsEditor" class="cards-editor"></div>
+      <button type="button" id="addCardRowBtn" class="btn ghost wide">+ Thêm thẻ</button>
+      <div class="dialog-actions"><button type="button" class="btn ghost" id="cancelSetDialog">Hủy</button><button type="submit" class="btn primary">Lưu bộ thẻ</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="pasteDialog" class="dialog small-dialog">
+    <form method="dialog" id="pasteForm">
+      <div class="dialog-head"><div><h2>Dán danh sách từ</h2><p class="muted small">Mỗi dòng: <b>từ[TAB]nghĩa</b> hoặc <b>từ;nghĩa</b></p></div><button type="button" class="icon-btn" id="closePasteDialog">×</button></div>
+      <textarea id="pasteArea" rows="12" placeholder="apple\tquả táo\nbook\tquyển sách"></textarea>
+      <div class="dialog-actions"><button type="button" class="btn ghost" id="cancelPasteDialog">Hủy</button><button type="submit" class="btn primary">Thêm vào bộ thẻ</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="importDialog" class="dialog small-dialog">
+    <form method="dialog" id="importForm">
+      <div class="dialog-head"><div><h2>Nhập dữ liệu</h2><p class="muted small">CSV/TSV hai cột hoặc file sao lưu JSON của FlashNova.</p></div><button type="button" class="icon-btn" id="closeImportDialog">×</button></div>
+      <label class="upload-box"><input id="importFileInput" type="file" accept=".csv,.tsv,.txt,.json,application/json,text/csv,text/plain" /><span>Chọn file</span><small id="importFileName">Chưa chọn file</small></label>
+      <label class="field-label">Tên bộ thẻ (dùng cho CSV/TSV)<input id="importSetName" placeholder="Bộ thẻ nhập vào" /></label>
+      <div class="dialog-actions"><button type="button" class="btn ghost" id="cancelImportDialog">Hủy</button><button type="submit" class="btn primary">Nhập</button></div>
+    </form>
+  </dialog>
+
+  <input id="restoreFileInput" type="file" accept=".json,application/json" class="hidden" />
+
+  <script src="app.js"></script>
+</body>
+</html>
